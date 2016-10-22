@@ -4,8 +4,25 @@
   user: append=yes 
         user={{ lookup('env','USER') }}
         groups=docker
-  become: true
 
-- name: Pull alpine image
-  docker_image: 
-      name: alpine
+- name: Install packages required for docker repo
+  apt: name={{ item }} state=latest
+  with_items:
+    - apt-transport-https
+    - ca-certificates
+
+- name: Get docker repo gpg key
+  apt_key:  keyserver=hkp://p80.pool.sks-keyservers.net:80
+            id=58118E89F3A912897C070ADBF76221572C52609D
+
+- name: Install docker-engine
+  apt:  name=docker-engine 
+        state=latest
+        update_cache=yes
+
+- name: Install requirements for managing docker containers with ansible
+  pip: name={{ item }}
+  become: true
+  with_items:
+    - docker-py
+    - docker-compose

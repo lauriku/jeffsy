@@ -20,6 +20,7 @@
     - screen
     - unzip
     - git
+    - python-pip
 
 - name: Add local user for administration
   user: name={{ lookup('env','USER') }}
@@ -37,3 +38,6 @@
 
 - name: Disable root SSH login
   lineinfile: "dest=/etc/ssh/sshd_config state=present regexp='^PermitRootLogin.*$' line='PermitRootLogin no'"
+
+- name: Disable password authentication for SSH
+  lineinfile: "dest=/etc/ssh/sshd_config state=present regexp='PasswordAuthentication' line='PasswordAuthentication no'"

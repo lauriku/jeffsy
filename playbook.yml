@@ -5,5 +5,14 @@
     - base
 
 - hosts: docker
+  become: true
+  tags:
+    - docker
   roles:
     - docker-host
+
+- hosts: minecraft
+  tags:
+    - minecraft
+  roles:
+    - minecraft
