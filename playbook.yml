@@ -12,6 +12,7 @@
     - docker-host
 
 - hosts: minecraft
+  become: true
   tags:
     - minecraft
   roles:

@@ -1,0 +1,47 @@
+---
+
+- name: Create a data container for vanilla
+  docker_container:
+    name: vanilla_data
+    image: busybox
+    volumes:
+      - /data
+
+- name: Create a data container for forge
+  docker_container:
+    name: forge_data
+    image: busybox
+    volumes:
+      - /data
+
+- name: Start vanilla minecraft server
+  docker_container:
+    name: vanilla_minecraft
+    image: itzg/minecraft-server
+    interactive: yes
+    tty: yes
+    ports:
+      - 25565:25565
+    volumes_from:
+      - vanilla_data
+    env:
+      EULA: TRUE
+      VERSION: 1.10.2
+      OPS: kkmll,Minkku
+
+- name: Start Forge minecraft server with All The Mods
+  docker_container:
+    name: atm_forge
+    image: itzg/minecraft-server
+    interactive: yes
+    tty: yes
+    ports:
+      - 25566:25565
+    volumes_from:
+      - forge_data
+    env:
+      EULA: TRUE
+      VERSION: 1.10.2
+      FORGEVERSION: 12.18.2.2099
+      OPS: kkmll,Minkku
+      MODPACK: https://minecraft.curseforge.com/projects/all-the-mods/files/2337935/download
