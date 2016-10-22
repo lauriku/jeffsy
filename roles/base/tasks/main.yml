@@ -1,0 +1,32 @@
+---
+
+- name: Update package cache
+  apt: update_cache=yes 
+
+- name: Install packages required for provisioning
+  apt: name={{ item }} state=latest
+  with_items:
+    - python-apt
+    - aptitude
+
+- name: Perform a safe upgrade to the system
+  apt: upgrade=safe
+
+- name: Install nice-to-have packages for administration
+  apt: name={{ item }} state=latest
+  with_items:
+    - vim
+    - htop
+    - screen
+
+- name: Add local user for administration
+  user: name={{ lookup('env','USER') }}
+
+- name: Add user as a sudoer
+  template: src=etc/sudoers.d/user.j2 
+            dest=/etc/sudoers.d/{{ lookup('env','USER') }}
+
+- name: Add local users ssh key to remote
+  authorized_key: user={{ lookup('env','USER') }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+
+
