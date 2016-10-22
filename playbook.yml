@@ -6,4 +6,4 @@
 
 - hosts: docker
   roles:
-    - docker
+    - docker-host

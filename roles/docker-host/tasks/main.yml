@@ -1,0 +1,11 @@
+---
+
+- name: Add admin user to the docker group
+  user: append=yes 
+        user={{ lookup('env','USER') }}
+        groups=docker
+  become: true
+
+- name: Pull alpine image
+  docker_image: 
+      name: alpine

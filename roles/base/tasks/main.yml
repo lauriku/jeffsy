@@ -23,12 +23,17 @@
 
 - name: Add local user for administration
   user: name={{ lookup('env','USER') }}
+        shell=/bin/bash
+        createhome=yes
+        home=/home/{{ lookup('env','USER') }}
 
 - name: Add user as a sudoer
   template: src=etc/sudoers.d/user.j2 
-            dest=/etc/sudoers.d/{{ lookup('env','USER') }}
+            dest=/etc/sudoers.d/{{ lookup('env','USER') | replace('.', '') }}
+
 
 - name: Add local users ssh key to remote
   authorized_key: user={{ lookup('env','USER') }} key="{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
-
+- name: Disable root SSH login
+  lineinfile: "dest=/etc/ssh/sshd_config state=present regexp='^PermitRootLogin.*$' line='PermitRootLogin no'"
