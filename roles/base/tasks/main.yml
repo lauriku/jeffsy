@@ -18,6 +18,8 @@
     - vim
     - htop
     - screen
+    - unzip
+    - git
 
 - name: Add local user for administration
   user: name={{ lookup('env','USER') }}
@@ -27,6 +29,6 @@
             dest=/etc/sudoers.d/{{ lookup('env','USER') }}
 
 - name: Add local users ssh key to remote
-  authorized_key: user={{ lookup('env','USER') }} key="{{ lookup('file', '~/.ssh/id_rsa.pub') }}"
+  authorized_key: user={{ lookup('env','USER') }} key="{{ lookup('file', lookup('env','HOME') + '/.ssh/id_rsa.pub') }}"
 
 
